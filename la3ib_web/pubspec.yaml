@@ -46,6 +46,8 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: any
+  firebase_storage: any
+  image_picker: ^1.0.4
 
 dev_dependencies:
   # Existing dev dependencies
