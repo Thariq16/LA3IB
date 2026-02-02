@@ -1,26 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'sign_in_controller.dart';
+part of 'game_repository.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$signInControllerHash() => r'3bb7f415ab91bda5cb305fa18b42b6dd2e0386d3';
+String _$gameRepositoryHash() => r'fb9deac461e4b215a8df5d544f01dfc1a19a35e8';
 
-/// See also [SignInController].
-@ProviderFor(SignInController)
-final signInControllerProvider =
-    AutoDisposeAsyncNotifierProvider<SignInController, void>.internal(
-  SignInController.new,
-  name: r'signInControllerProvider',
+/// See also [gameRepository].
+@ProviderFor(gameRepository)
+final gameRepositoryProvider = Provider<GameRepository>.internal(
+  gameRepository,
+  name: r'gameRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$signInControllerHash,
+      : _$gameRepositoryHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$SignInController = AutoDisposeAsyncNotifier<void>;
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef GameRepositoryRef = ProviderRef<GameRepository>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

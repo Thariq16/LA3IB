@@ -1,19 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
 import 'package:flutter/foundation.dart';
+import '../../../config/env_config.dart';
 
 part 'auth_repository.g.dart';
 
 class AuthRepository {
   AuthRepository(this._auth);
   final FirebaseAuth _auth;
-  // TODO: Replace with your actual Web Client ID from Firebase Console -> Authentication -> Google -> Web SDK configuration
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    clientId: kIsWeb 
-        ? '903668742117-vrmce023vnpkgutltplr05nosc1ea3sp.apps.googleusercontent.com' 
-        : null, 
+  
+  // Google Sign-In instance - uses environment variable for web client ID
+  late final GoogleSignIn _googleSignIn = GoogleSignIn(
+    clientId: kIsWeb && EnvConfig.googleClientId.isNotEmpty
+        ? EnvConfig.googleClientId
+        : null,
   );
 
   Stream<User?> authStateChanges() => _auth.authStateChanges();
@@ -21,19 +22,19 @@ class AuthRepository {
 
   Future<UserCredential> signInWithGoogle() async {
     try {
-      print('DEBUG: Starting Google Sign-In');
+      if (kDebugMode) print('DEBUG: Starting Google Sign-In');
       final googleUser = await _googleSignIn.signIn();
-      print('DEBUG: Google User: $googleUser');
+      if (kDebugMode) print('DEBUG: Google User: $googleUser');
       
       final googleAuth = await googleUser?.authentication;
-      print('DEBUG: Google Auth: $googleAuth');
+      if (kDebugMode) print('DEBUG: Google Auth: $googleAuth');
 
       if (googleAuth != null) {
         final credential = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
         );
-        print('DEBUG: Signing in with credential');
+        if (kDebugMode) print('DEBUG: Signing in with credential');
         return await _auth.signInWithCredential(credential);
       }
       throw FirebaseAuthException(
@@ -41,7 +42,7 @@ class AuthRepository {
         message: 'Sign in aborted by user',
       );
     } catch (e, st) {
-      print('DEBUG: Google Sign-In Error: $e\n$st');
+      if (kDebugMode) print('DEBUG: Google Sign-In Error: $e\n$st');
       rethrow;
     }
   }

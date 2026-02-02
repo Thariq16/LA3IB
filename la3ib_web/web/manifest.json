@@ -1,13 +1,17 @@
 {
-    "name": "la3ib_web",
-    "short_name": "la3ib_web",
-    "start_url": ".",
+    "name": "LA3IB",
+    "short_name": "LA3IB",
+    "start_url": "/",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#121212",
+    "theme_color": "#00A651",
+    "description": "Find players. Join games. Play sports in Saudi Arabia.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
+    "categories": [
+        "sports",
+        "social"
+    ],
     "icons": [
         {
             "src": "icons/Icon-192.png",
@@ -30,6 +34,19 @@
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "maskable"
+        }
+    ],
+    "screenshots": [],
+    "shortcuts": [
+        {
+            "name": "Find Games",
+            "url": "/",
+            "icons": [
+                {
+                    "src": "icons/Icon-192.png",
+                    "sizes": "192x192"
+                }
+            ]
         }
     ]
 }

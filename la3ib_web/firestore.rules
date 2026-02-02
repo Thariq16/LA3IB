@@ -1,0 +1,85 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isGameOrganizer(gameId) {
+      return isAuthenticated() && 
+        get(/databases/$(database)/documents/games/$(gameId)).data.organizerId == request.auth.uid;
+    }
+    
+    // User documents
+    match /users/{userId} {
+      // Anyone authenticated can read user profiles (for participant lists)
+      allow read: if isAuthenticated();
+      
+      // Only the user can create/update their own profile
+      allow create: if isOwner(userId) && 
+        request.resource.data.uid == userId &&
+        request.resource.data.email is string &&
+        request.resource.data.displayName is string;
+      
+      allow update: if isOwner(userId) &&
+        request.resource.data.uid == resource.data.uid && // Cannot change UID
+        request.resource.data.email == resource.data.email; // Cannot change email
+      
+      // Only the user can delete their own profile
+      allow delete: if isOwner(userId);
+    }
+    
+    // Games collection
+    match /games/{gameId} {
+      // Anyone authenticated can read games
+      allow read: if isAuthenticated();
+      
+      // Anyone authenticated can create a game
+      allow create: if isAuthenticated() &&
+        request.resource.data.organizerId == request.auth.uid &&
+        request.resource.data.sport is string &&
+        request.resource.data.genderRule in ['men', 'women', 'mixed'] &&
+        request.resource.data.price is number &&
+        request.resource.data.price >= 0 &&
+        request.resource.data.maxPlayers is int &&
+        request.resource.data.maxPlayers > 0 &&
+        request.resource.data.currentPlayers == 0 &&
+        request.resource.data.status == 'open';
+      
+      // Only organizer can update their game
+      allow update: if isGameOrganizer(gameId) &&
+        request.resource.data.organizerId == resource.data.organizerId && // Cannot change organizer
+        request.resource.data.currentPlayers >= resource.data.currentPlayers; // Cannot decrease player count manually
+      
+      // Only organizer can delete their game
+      allow delete: if isGameOrganizer(gameId);
+      
+      // Participants subcollection
+      match /participants/{participantId} {
+        // Anyone can read participants list
+        allow read: if isAuthenticated();
+        
+        // Users can add themselves, or organizer can add others
+        allow create: if isAuthenticated() &&
+          (participantId == request.auth.uid || isGameOrganizer(gameId)) &&
+          request.resource.data.userId == participantId &&
+          request.resource.data.status in ['pending', 'confirmed', 'paid'] &&
+          request.resource.data.joinedAt is timestamp;
+        
+        // Users can update their own participation, or organizer can update any
+        allow update: if isAuthenticated() &&
+          (participantId == request.auth.uid || isGameOrganizer(gameId));
+        
+        // Users can remove themselves, or organizer can remove anyone
+        allow delete: if isAuthenticated() &&
+          (participantId == request.auth.uid || isGameOrganizer(gameId));
+      }
+    }
+  }
+}

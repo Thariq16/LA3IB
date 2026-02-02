@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../features/authentication/data/auth_repository.dart';
-import '../features/authentication/data/firestore_service.dart';
-import '../features/authentication/presentation/sign_in_screen.dart';
+import '../features/authentication/presentation/user_profile_provider.dart';
+import '../features/authentication/presentation/sign_in_screen.dart' show ModernSignInScreen;
 import '../features/authentication/presentation/onboarding_screen.dart';
 import '../features/home/presentation/home_screen.dart';
 import '../features/profile/presentation/profile_screen.dart';
@@ -18,22 +18,29 @@ GoRouter goRouter(GoRouterRef ref) {
   return GoRouter(
     initialLocation: '/',
     debugLogDiagnostics: true,
-    redirect: (context, state) async {
+    redirect: (context, state) {
       final user = authRepository.currentUser;
       final isLoggedIn = user != null;
       final path = state.uri.path;
 
       if (isLoggedIn) {
-        // If logged in, check if user has a profile
-        final appUser = await ref.read(firestoreServiceProvider).watchAppUser(user.uid).first;
+        // Use cached user profile instead of creating new listener
+        final appUserAsync = ref.read(currentUserProfileProvider);
+        final appUser = appUserAsync.value;
         final hasProfile = appUser != null;
+
+        // If profile is still loading, allow navigation to continue
+        // The screen will handle the loading state
+        if (appUserAsync.isLoading) {
+          return null;
+        }
 
         if (!hasProfile) {
           if (path != '/onboarding') {
             return '/onboarding';
           }
         } else {
-           if (path == '/login' || path == '/onboarding') {
+          if (path == '/login' || path == '/onboarding') {
             return '/';
           }
         }
@@ -45,7 +52,9 @@ GoRouter goRouter(GoRouterRef ref) {
       }
       return null;
     },
-    refreshListenable: GoRouterRefreshStream(authRepository.authStateChanges()),
+    refreshListenable: GoRouterRefreshStream(
+      authRepository.authStateChanges(),
+    ),
     routes: [
       GoRoute(
         path: '/',
@@ -62,7 +71,7 @@ GoRouter goRouter(GoRouterRef ref) {
       GoRoute(
         path: '/login',
         name: 'login',
-        builder: (context, state) => const SignInScreen(),
+        builder: (context, state) => const ModernSignInScreen(),
       ),
       GoRoute(
         path: '/onboarding',

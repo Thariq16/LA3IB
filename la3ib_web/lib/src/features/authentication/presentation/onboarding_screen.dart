@@ -8,6 +8,7 @@ import '../../../common_widgets/responsive_center.dart';
 import '../../../constants/app_sizes.dart';
 import '../../../utils/error_message_util.dart';
 import 'onboarding_controller.dart';
+import 'user_profile_provider.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
@@ -62,7 +63,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     final state = ref.watch(onboardingControllerProvider);
     final loc = AppLocalizations.of(context)!;
 
-    ref.listen<AsyncValue>(onboardingControllerProvider, (_, state) {
+    ref.listen<AsyncValue>(onboardingControllerProvider, (previous, state) {
       if (state.hasError) {
         print('DEBUG: Onboarding Error: ${state.error}');
         ScaffoldMessenger.of(context).showSnackBar(
@@ -73,8 +74,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
-      } else if (state.hasValue && !state.isLoading) {
-         print('DEBUG: Onboarding Success');
+      } else if (!state.isLoading && previous?.isLoading == true && !state.hasError) {
+         print('DEBUG: Onboarding Success - navigating to home');
+         // Invalidate user profile to trigger refresh
+         ref.invalidate(currentUserProfileProvider);
+         // Navigate to home
+         if (context.mounted) {
+           context.go('/');
+         }
       }
     });
 

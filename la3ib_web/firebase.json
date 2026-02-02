@@ -1,1 +1,49 @@
-{"flutter":{"platforms":{"dart":{"lib/firebase_options.dart":{"projectId":"la3ib-8b036","configurations":{"web":"1:903668742117:web:c43cd21da91d65ea77210c"}}}}}}
+{
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**",
+      "**/*.md"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ],
+    "headers": [
+      {
+        "source": "**/*.@(js|css)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "max-age=31536000"
+          }
+        ]
+      },
+      {
+        "source": "**/*.@(jpg|jpeg|gif|png|svg|webp|ico)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "max-age=31536000"
+          }
+        ]
+      }
+    ]
+  },
+  "flutter": {
+    "platforms": {
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "la3ib-8b036",
+          "configurations": {
+            "web": "1:903668742117:web:c43cd21da91d65ea77210c"
+          }
+        }
+      }
+    }
+  }
+}
