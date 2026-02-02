@@ -1,0 +1,29 @@
+{
+  "appTitle": "LA3IB",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "homeTitle": "LA3IB Home",
+  "@homeTitle": {
+    "description": "The title of the home page"
+  },
+  "signInTitle": "Sign In",
+  "signInGoogle": "Sign in with Google",
+  "emailLabel": "Email",
+  "passwordLabel": "Password",
+  "emailRequired": "Please enter your email",
+  "passwordRequired": "Please enter your password",
+  "signInButton": "Sign In",
+  "onboardingTitle": "Setup Profile",
+  "nameLabel": "Display Name",
+  "nameRequired": "Please enter your name",
+  "cityLabel": "City",
+  "cityRequired": "Please select your city",
+  "genderLabel": "Gender",
+  "genderMale": "Male",
+  "genderFemale": "Female",
+  "sportsLabel": "Preferred Sports (Max 2)",
+  "sportsRequired": "Please select at least 1 sport",
+  "sportsMaxError": "You can only select up to 2 sports",
+  "completeButton": "Complete Setup"
+}

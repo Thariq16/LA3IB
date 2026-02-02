@@ -1,0 +1,23 @@
+{
+  "appTitle": "لاعب",
+  "homeTitle": "لاعب الرئيسية",
+  "signInTitle": "تسجيل الدخول",
+  "signInGoogle": "تسجيل الدخول عبر جوجل",
+  "emailLabel": "البريد الإلكتروني",
+  "passwordLabel": "كلمة المرور",
+  "emailRequired": "يرجى إدخال البريد الإلكتروني",
+  "passwordRequired": "يرجى إدخال كلمة المرور",
+  "signInButton": "دخول",
+  "onboardingTitle": "إعداد الملف الشخصي",
+  "nameLabel": "الاسم المعروض",
+  "nameRequired": "يرجى إدخال اسمك",
+  "cityLabel": "المدينة",
+  "cityRequired": "يرجى اختيار مدينتك",
+  "genderLabel": "الجنس",
+  "genderMale": "ذكر",
+  "genderFemale": "أنثى",
+  "sportsLabel": "الرياضات المفضلة (حد أقصى 2)",
+  "sportsRequired": "يرجى اختيار رياضة واحدة على الأقل",
+  "sportsMaxError": "يمكنك اختيار رياضتين كحد أقصى",
+  "completeButton": "إكمال الإعداد"
+}
