@@ -15,6 +15,9 @@ part 'app_router.g.dart';
 GoRouter goRouter(GoRouterRef ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   
+  // Watch the profile provider so router rebuilds when profile loads
+  final userProfileAsync = ref.watch(currentUserProfileProvider);
+  
   return GoRouter(
     initialLocation: '/',
     debugLogDiagnostics: true,
@@ -24,15 +27,19 @@ GoRouter goRouter(GoRouterRef ref) {
       final path = state.uri.path;
 
       if (isLoggedIn) {
-        // Use cached user profile instead of creating new listener
-        final appUserAsync = ref.read(currentUserProfileProvider);
-        final appUser = appUserAsync.value;
+        final appUser = userProfileAsync.value;
+        final isLoading = userProfileAsync.isLoading;
         final hasProfile = appUser != null;
 
-        // If profile is still loading, allow navigation to continue
-        // The screen will handle the loading state
-        if (appUserAsync.isLoading) {
-          return null;
+        // If profile is still loading, keep user on current page
+        // Don't redirect to onboarding until we know for sure there's no profile
+        if (isLoading) {
+          // If on login page and logged in but loading profile, stay on login
+          // The router will re-evaluate once profile loads
+          if (path == '/login') {
+            return null; // Stay on login while loading
+          }
+          return null; // Stay on current page while loading
         }
 
         if (!hasProfile) {
